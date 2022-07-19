@@ -279,3 +279,4 @@ djvideomem/media/
 !.envs/.local/
 
 ngrok
+db.sqlite3
