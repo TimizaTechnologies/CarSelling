@@ -1,32 +1,347 @@
 {% extends "app/layout.html" %}
 
+{% load static  %}
+{% load humanize %}
+{% block title %}
+| Home 
+{% endblock %}
+
 {% block content %}
 
-<div class="jumbotron">
-    <h1>Django</h1>
-    <p class="lead">Django is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://www.djangoproject.com/" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-</div>
+<!-- Banner start -->
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            Django gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://djangobook.com/django-tutorials/">Learn more &raquo;</a></p>
+<div class="container">
+    <div class="row">
+
+        <!-- Search box 3 start -->
+            <form action="{% url 'search' %}" method="" class="col-md-8">
+                <div class="form-group">
+                    <input type="text" name="keyword" placeholder="Search by name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <select class="form-control search-fields" name="model">
+                        <option selected="true" disabled="disabled">Model</option>
+                        {% for model in model_search %}
+                        <option value="{{model}}">{{model}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control search-fields" name="city">
+                        <option selected="true" disabled="disabled">Location</option>
+                        {% for city in city_search %}
+                        <option value="{{city}}">{{city}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control search-fields" name="year">
+                        <option selected="true" disabled="disabled">Year</option>
+                        {% for year in year_search %}
+                        <option value="{{year}}">{{year}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control search-fields" name="body_style">
+                        <option selected="true" disabled="disabled">Select Type Of Car</option>
+                        {% for body_style in body_style_search %}
+                        <option value="{{body_style}}">{{body_style}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="range-slider clearfix">
+                                <label>Price</label>
+                                <div data-min="0" data-max="150000"  data-min-name="min_price" data-max-name="max_price" data-unit="USD" class="range-slider-ui ui-slider" aria-disabled="false"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                <div class="form-group">
+                    <button class="btn btn-block button-theme btn-md">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+</div>
+<!-- Banner end -->
+
+<!-- Search box 2 end -->
+
+<!-- Featured car start -->
+<div class="featured-car content-area-5">
+    <div class="container">
+        <!-- Main title -->
+        <div class="main-title">
+            <h1>Featured <span>Cars</span></h1>
+        </div>
+        <!-- Slick slider area start -->
+        <div class="slick-slider-area clearfix">
+            <div class="row slick-carousel" data-slick='{"slidesToShow": 3, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
+              {% for cars in featured_cars %}
+                <div class="slick-slide-item">
+                    <div class="car-box-3">
+                        <div class="car-thumbnail">
+                            <a href="{% url 'car' id=cars.id %}" class="car-img">
+                                <div class="tag-2">Featured</div>
+                                <div class="price-box">
+                                    <span class="del"><del>${{cars.price|intcomma}}.00</del></span>
+                                    <br>
+                                    <span>$780.00</span>
+                                </div>
+                                <img class="d-block w-100" src="{{cars.car_photo.url}}" alt="car" style="min-height:262px; max-height:262px">
+                            </a>
+                            <div class="carbox-overlap-wrapper">
+                                <div class="overlap-box">
+                                    <div class="overlap-btns-area">
+                                        <div class="car-magnify-gallery">
+                                            <a href="{{cars.car_photo.url}}" class="overlap-btn">
+                                                <i class="fa fa-expand"></i>
+                                                <img class="hidden" src="{{cars.car_photo.url}}">
+                                            </a>
+                                            <a href="{{cars.car_photo1.url}}" class="hidden">
+                                                <img class="hidden" src="{{cars.car_photo1.url}}">
+                                            </a>
+                                            <a href="{{cars.car_photo2.url}}" class="hidden">
+                                                <img class="hidden" src="{{cars.car_photo2.url}}">
+                                            </a>
+                                            <a href="{{cars.car_photo3.url}}" class="hidden">
+                                                <img class="hidden" src="{{cars.car_photo3.url}}">
+                                            </a>
+                                            <a href="{{cars.car_photo4.url}}" class="hidden">
+                                                <img class="hidden" src="{{cars.car_photo4.url}}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail">
+                            <h1 class="title">
+                                <a href="{% url 'car' id=cars.id %}">{{cars.car_title}}</a>
+                            </h1>
+                            <div class="location">
+                                <a href="{% url 'car' id=cars.id %}">
+                                    <i class="flaticon-pin"></i>{{cars.state}} {{cars.city}},
+                                </a>
+                            </div>
+                            <ul class="facilities-list clearfix">
+                                <li>{{cars.fuel_type}}</li>
+                                <li>{{cars.miles|intcomma}}km</li>
+                                <li>{{cars.transmission}}</li>
+                                <li>{{cars.body_style}}</li>
+                                <li>{{cars.color}}</li>
+                                <li>{{cars.created_date}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+              {% endfor %}
+                </div>
+            </div>
+            <div class="slick-btn">
+                <div class="slick-prev slick-arrow-buton sab-4">
+                    <i class="fa fa-angle-left"></i>
+                </div>
+                <div class="slick-next slick-arrow-buton sab-3">
+                    <i class="fa fa-angle-right"></i>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>The Python Package Index is a repository of software for the Python programming language.</p>
-        <p><a class="btn btn-default" href="https://pypi.org/">Learn more &raquo;</a></p>
+</div>
+<!-- Featured car end -->
+
+<!-- Rent car start -->
+<div class="featured-car content-area">
+    <div class="container">
+        <!-- Main title -->
+        <div class="main-title">
+            <h1>Latest <span>Cars</span></h1>
+        </div>
+        <div class="row">
+{% for cars in latest_cars %}
+            <div class="col-lg-4 col-md-6">
+
+                <div class="car-box">
+                    <div class="car-thumbnail">
+                        <a href="car.html" class="car-img">
+                            <div class="tag">For Sale</div>
+                            <img class="d-block w-100" src="{{cars.car_photo.url}}" alt="car" style="min-height:262px; max-height:262px">
+                            <div class="facilities-list clearfix">
+                                <ul>
+                                    <li>
+                                        <span><i class="flaticon-way"></i></span>{{cars.miles|intcomma}}km
+                                    </li>
+                                    <li>
+                                        <span><i class="flaticon-calendar-1"></i></span>{{cars.year}}
+                                    </li>
+                                    <li>
+                                        <span><i class="flaticon-manual-transmission"></i></span>{{cars.transmission}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </a>
+                        <div class="carbox-overlap-wrapper">
+                            <div class="overlap-box">
+                                <div class="overlap-btns-area">
+                                    <div class="car-magnify-gallery">
+                                        <a href="{{cars.car_photo.url}}" class="overlap-btn">
+                                            <i class="fa fa-expand"></i>
+                                            <img class="hidden" src="{{cars.car_photo.url}}">
+                                        </a>
+                                        {% if cars.car_photo1 %}
+                                        <a href="{{cars.car_photo1.url}}" class="hidden">
+                                            <img class="hidden" src="{{cars.car_photo1.url}}">
+                                        </a>
+                                        {% endif %}
+                                        {% if cars.car_photo2 %}
+                                        <a href="{{cars.car_photo2.url}}" class="hidden">
+                                            <img class="hidden" src="{{cars.car_photo2.url}}">
+                                        </a>
+                                        {% endif %}
+                                        {% if cars.car_photo3 %}
+                                        <a href="{{cars.car_photo3.url}}" class="hidden">
+                                            <img class="hidden" src="{{cars.car_photo3.url}}">
+                                        </a>
+                                        {% endif %}
+                                        {% if cars.car_photo4 %}
+                                        <a href="{{cars.car_photo4.url}}" class="hidden">
+                                            <img class="hidden" src="{{cars.car_photo4.url}}">
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail">
+                        <h1 class="title">
+                            <a href="{% url 'car' cars.id %}">{{cars.car_title}}</a>
+                        </h1>
+                        <div class="location">
+                            <a href="{% url 'car' id=cars.id %}">
+                                <i class="flaticon-pin"></i>{{cars.state}} {{cars.city}},
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer clearfix">
+                        <div class="pull-left ratings days">
+                            <p class="cartype">{{cars.body_style}}</p>
+                        </div>
+                        <div class="pull-right">
+                            <p class="price">${{cars.price|intcomma}}.00</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Microsoft Azure</h2>
-        <p>You can easily publish to Microsoft Azure using Visual Studio. Find out how you can host your application using a free trial today.</p>
-        <p><a class="btn btn-default" href="http://azure.microsoft.com">Learn more &raquo;</a></p>
+</div>
+<!-- Rent car end -->
+
+
+<!-- Our team start -->
+{% include 'app/includes/team.html' %}
+<!-- Our team end -->
+
+<!-- Intro section start -->
+<div class="intro-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-md-8 col-sm-12">
+                <div class="intro-text">
+                    <h3>Do You Have Questions ?</h3>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <a href="{% url 'contact' %}" class="btn btn-md">Get in Touch</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Intro section end -->
+
+<!-- Footer start -->
+
+<!-- Footer end -->
+
+<!-- Full Page Search -->
+
+
+<!-- Car Overview Modal -->
+<div class="car-model-2">
+    <div class="modal fade" id="carOverviewModal" tabindex="-1" role="dialog" aria-labelledby="carOverviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="carOverviewModalLabel">
+                        <h4>Explore Your Dream Car</h4>
+                        <h5><i class="flaticon-pin"></i> 123 Sample St.</h5>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row modal-raw">
+                        <div class="col-lg-6 modal-left">
+                            <div class="item active">
+                                <img src="{% static 'img/car-13.jpg' %}" alt="best-car" class="img-fluid modalLabel-1">
+                                <img src="{% static 'img/car-14.jpg' %}" alt="best-car" class="img-fluid modalLabel-2">
+                                <div class="sobuz">
+                                    <div class="price-box" style="padding-bottom: 5px;">
+                                        <span class="del-2">$1050.00</span>
+                                    </div>
+                                    <div class="">
+                                        <a href="car.html" class="btn btn-md btn-round btn-theme">Convertible</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 modal-right">
+                            <div class="modal-right-content">
+                                <section>
+                                    <h3>Features</h3>
+                                    <div class="features">
+                                        <ul class="bullets">
+                                            <li>Cruise Control</li>
+                                            <li>Airbags</li>
+                                            <li>Air Conditioning</li>
+                                            <li>Alarm System</li>
+                                            <li>Audio Interface</li>
+                                            <li>CDR Audio</li>
+                                            <li>Seat Heating</li>
+                                            <li>ParkAssist</li>
+                                        </ul>
+                                    </div>
+                                </section>
+                                <section>
+                                    <h3>Overview</h3>
+                                    <ul class="bullets">
+                                        <li>Model</li>
+                                        <li>Year</li>
+                                        <li>Condition</li>
+                                        <li>Price</li>
+                                        <li>Audi</li>
+                                        <li>2020</li>
+                                        <li>Brand New</li>
+                                        <li>$178,000</li>
+                                    </ul>
+                                </section>
+                                <div class="description">
+                                    <h3>Description</h3>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.</p>
+                                    <a href="car-details.html" class="btn btn-md btn-round btn-theme">Show Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
